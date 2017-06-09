@@ -22,13 +22,13 @@ module.exports = class IGLogin{
     app.get(callbackUrl, (req, res) => {
       const code = req.query.code;
       const form = {
-        client_id: '5805b54ce69a4233af137070bf3e3971',
-        client_secret: '5d587495fc514dccbb6542ead4e35881',
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
         grant_type: 'authorization_code',
-        redirect_uri: 'http://127.0.0.1:8080/callback/',
+        redirect_uri: this.redirectUrl,
         code
       };
-      this.getToken(form, (error, response, body) => {
+      this.getProfile(form, (error, response, body) => {
         if(error) return res.json({ error });
         this.setData(body);
         res.json(this.getUser());
@@ -50,7 +50,7 @@ module.exports = class IGLogin{
     return this.user;
   }
 
-  getToken(form, cb) {
+  getProfile(form, cb) {
     request({
       method: 'POST',
       url: 'https://api.instagram.com/oauth/access_token',
